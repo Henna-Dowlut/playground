@@ -16,7 +16,7 @@ This is an automation project which carries out various checks on different flow
 Follow these steps to set up the project locally.
 
 1. Clone the repository:
-   git clone https://github.com/Henna-Dowlut/playground-playwright.git
+   git clone https://github.com/Henna-Dowlut/playground.git
 
 2. Navigate to the project directory:
    cd playground
@@ -26,8 +26,8 @@ Follow these steps to set up the project locally.
 
 4. Run Only UI or API Tests:
 
-UI Tests:
-npm run test:ui
+    - UI Tests:
+      npm run test:ui
 
-API Tests:
-npm run test:api
+    - API Tests:
+      npm run test:api
