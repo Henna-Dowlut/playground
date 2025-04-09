@@ -1,0 +1,68 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Authentication Flow >> Valid login
+- Location: C:\Users\dowh\playground\tests\ui\login.spec.ts:22:7
+
+# Error details
+
+```
+TimeoutError: locator.waitFor: Timeout 10ms exceeded.
+Call log:
+  - waiting for locator('[data-test="email"]') to be visible
+
+    at LoginPage.enterEmailAndPassword (C:\Users\dowh\playground\tests\pages\login.page.ts:29:22)
+    at C:\Users\dowh\playground\tests\ui\login.spec.ts:25:21
+```
+
+# Test source
+
+```ts
+   1 | import { expect, Locator, Page } from "@playwright/test";
+   2 | export class LoginPage {
+   3 |   readonly url = "https://practicesoftwaretesting.com/auth/login";
+   4 |   readonly page: Page;
+   5 |   readonly email: Locator;
+   6 |   readonly password: Locator;
+   7 |   readonly submitBtn: Locator;
+   8 |   readonly passwordErrorMsg: Locator;
+   9 |   readonly loginErrorMsg: Locator;
+  10 |   readonly loggedInUserNavBar: Locator;
+  11 |   readonly userNavBarDropdown: Locator;
+  12 |
+  13 |   constructor(page: Page) {
+  14 |     this.page = page;
+  15 |     this.email = page.locator('[data-test="email"]');
+  16 |     this.password = page.locator('[data-test="password"]');
+  17 |     this.submitBtn = page.locator('[data-test="login-submit"]');
+  18 |     this.passwordErrorMsg = page.getByText("Password is required");
+  19 |     this.loginErrorMsg = page.locator('[data-test="login-error"]');
+  20 |     this.loggedInUserNavBar = page.locator('[data-test="nav-menu"]');
+  21 |     this.userNavBarDropdown = page.getByRole("list", { name: "Jack Howe" });
+  22 |   }
+  23 |
+  24 |   async gotoLogin() {
+  25 |     await this.page.goto(this.url);
+  26 |   }
+  27 |
+  28 |   async enterEmailAndPassword(email: string, password: string) {
+> 29 |     await this.email.waitFor({ state: "visible" });
+     |                      ^ TimeoutError: locator.waitFor: Timeout 10ms exceeded.
+  30 |     await this.email.fill(email);
+  31 |     await this.password.fill(password);
+  32 |     await this.submitBtn.waitFor({ state: "visible" });
+  33 |     await this.submitBtn.click();
+  34 |     await this.page.waitForLoadState("networkidle");
+  35 |   }
+  36 |
+  37 |   async clickOnNavBarUsername() {
+  38 |     await this.loggedInUserNavBar.click();
+  39 |   }
+  40 | }
+  41 |
+```

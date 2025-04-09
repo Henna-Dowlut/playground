@@ -1,0 +1,15 @@
+{
+    "validUser": {
+      "email": "customer2@practicesoftwaretesting.com",
+      "password": "welcome01"
+    },
+    "invalidUser": {
+      "email": "wrong@example.com",
+      "password": "wrongpass"
+    },
+    "validBankTransfer": {
+      "bank_name": "#mcb",
+      "account_name": "00/00",
+      "account_number": "cvv"
+    }
+  }

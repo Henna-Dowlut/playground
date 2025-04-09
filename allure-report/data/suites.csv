@@ -1,0 +1,7 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","34250","Add a product to cart","chromium","Wed Apr 09 16:19:30 MUT 2025","passed","Wed Apr 09 16:20:04 MUT 2025","Purchase flow","ui\products.spec.ts","",""
+"","34678","Invalid checkout with bad payment","chromium","Wed Apr 09 16:19:30 MUT 2025","passed","Wed Apr 09 16:20:05 MUT 2025","Checkout & Complete Order","ui\checkout.spec.ts","",""
+"","34202","Multiple Product Order","chromium","Wed Apr 09 16:19:30 MUT 2025","passed","Wed Apr 09 16:20:04 MUT 2025","Checkout & Complete Order","ui\checkout.spec.ts","",""
+"","10840","Valid login","chromium","Wed Apr 09 16:19:30 MUT 2025","passed","Wed Apr 09 16:19:41 MUT 2025","Authentication Flow","ui\login.spec.ts","",""
+"","36006","Valid checkout with one product","chromium","Wed Apr 09 16:19:30 MUT 2025","passed","Wed Apr 09 16:20:06 MUT 2025","Checkout & Complete Order","ui\checkout.spec.ts","",""
+"","8157","Invalid login","chromium","Wed Apr 09 16:19:30 MUT 2025","passed","Wed Apr 09 16:19:38 MUT 2025","Authentication Flow","ui\login.spec.ts","",""

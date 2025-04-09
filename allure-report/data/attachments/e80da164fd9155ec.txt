@@ -1,0 +1,78 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Checkout & Complete Order >> Invalid checkout with bad payment
+- Location: C:\Users\dowh\playground\tests\ui\checkout.spec.ts:38:7
+
+# Error details
+
+```
+Error: locator.click: Target page, context or browser has been closed
+Call log:
+  - waiting for locator('//img[@alt=\'Combination Pliers\']')
+    - locator resolved to <img loading="lazy" class="card-img-top" alt="Combination Pliers" _ngcontent-ng-c127265017="" src="assets/img/products/pliers01.avif"/>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not stable
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not stable
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is not stable
+    - retrying click action
+      - waiting 500ms
+
+    at ProductPage.addProductToCart (C:\Users\dowh\playground\tests\pages\products.page.ts:26:23)
+    at C:\Users\dowh\playground\tests\ui\checkout.spec.ts:21:23
+```
+
+# Test source
+
+```ts
+   1 | import { expect, Locator, Page } from "@playwright/test";
+   2 |
+   3 | export class ProductPage {
+   4 |   readonly page: Page;
+   5 |   readonly product: Locator;
+   6 |   readonly addToCartBtn: Locator;
+   7 |   readonly addedToCartConfirmationMsg: Locator;
+   8 |   readonly viewCartBtn: Locator;
+   9 |
+  10 |   constructor(page: Page) {
+  11 |     this.page = page;
+  12 |     this.addToCartBtn = page.locator('[data-test="add-to-cart"]');
+  13 |     this.addedToCartConfirmationMsg = page
+  14 |       .locator("div")
+  15 |       .filter({ hasText: "Product added to shopping" })
+  16 |       .nth(2);
+  17 |     this.viewCartBtn = page.locator('[data-test="nav-cart"]');
+  18 |   }
+  19 |
+  20 |   async gotoProducts() {
+  21 |     await this.page.goto("https://practicesoftwaretesting.com/");
+  22 |   }
+  23 |
+  24 |   async addProductToCart(productName: string) {
+  25 |     const productCard = this.page.locator(`xpath=//img[@alt='${productName}']`);
+> 26 |     await productCard.click();
+     |                       ^ Error: locator.click: Target page, context or browser has been closed
+  27 |     await this.addToCartBtn.click();
+  28 |     await expect(this.addedToCartConfirmationMsg).toHaveText(
+  29 |       "Product added to shopping cart."
+  30 |     );
+  31 |   }
+  32 |
+  33 |   async viewCart() {
+  34 |     await this.viewCartBtn.click();
+  35 |   }
+  36 | }
+  37 |
+```

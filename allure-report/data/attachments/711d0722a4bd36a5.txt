@@ -1,0 +1,200 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Checkout & Complete Order >> Invalid checkout with bad payment
+- Location: C:\Users\dowh\playground\tests\ui\checkout.spec.ts:38:7
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-test="finish"]')
+    - locator resolved to <button disabled type="button" data-test="finish" class="btn btn-success" _ngcontent-ng-c1497850552=""> Confirm </button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+      - waiting 100ms
+    10 × waiting for element to be visible, enabled and stable
+       - element is not enabled
+     - retrying click action
+       - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+
+    at CheckoutPage.confirmPayment (C:\Users\dowh\playground\tests\pages\checkout.page.ts:82:34)
+    at C:\Users\dowh\playground\tests\ui\checkout.spec.ts:45:24
+```
+
+# Page snapshot
+
+```yaml
+- navigation:
+  - link "Practice Software Testing - Toolshop":
+    - img
+  - menubar "Main menu":
+    - menuitem "Home":
+      - link "Home"
+    - menuitem "Categories":
+      - button "Categories"
+    - menuitem "Contact":
+      - link "Contact"
+    - menuitem "Jack Howe":
+      - button "Jack Howe"
+    - menuitem "cart":
+      - link "cart": "1"
+- list:
+  - listitem: Cart 1
+  - listitem: Sign in 2
+  - listitem: Billing Address 3
+  - listitem: Payment 4
+- heading "Payment" [level=3]
+- text: Payment Method
+- combobox "Payment Method":
+  - option "Choose your payment method" [disabled]
+  - option "Bank Transfer" [selected]
+  - option "Cash on Delivery"
+  - option "Credit Card"
+  - option "Buy Now Pay Later"
+  - option "Gift Card"
+- text: Bank Name
+- textbox "Bank Name": "#mcb"
+- text: Bank name can only contain letters and spaces. Account Name
+- textbox "Account Name": 00/00
+- text: Account name can contain letters, numbers, spaces, periods, apostrophes, and hyphens. Account Number
+- textbox "Account Number": cvv
+- text: Please enter your bank account number as it appears on your bank statement. It's a unique series of numbers used to identify your individual account. Avoid including any spaces or hyphens. Account number must be numeric.
+- button "Confirm" [disabled]
+- paragraph:
+  - text: This is a DEMO application (
+  - link "GitHub repo"
+  - text: ), used for software testing training purpose. |
+  - link "Support this project"
+  - text: "|"
+  - link "Privacy Policy"
+  - text: "| Banner photo by"
+  - link "Barn Images"
+  - text: "on"
+  - link "Unsplash"
+  - text: .
+```
+
+# Test source
+
+```ts
+   1 | import { expect, Locator, Page } from "@playwright/test";
+   2 | import { TIMEOUT } from "dns";
+   3 | export class CheckoutPage {
+   4 |   readonly page: Page;
+   5 |   readonly streetField: Locator;
+   6 |   readonly stateField: Locator;
+   7 |   readonly postalCodeField: Locator;
+   8 |   readonly proceedCheckoutBtn1: Locator;
+   9 |   readonly proceedCheckoutBtn2: Locator;
+   10 |   readonly paymentHeading: Locator;
+   11 |   readonly paymentCombobox: Locator;
+   12 |   readonly confirmPaymentBtn: Locator;
+   13 |   readonly paymentSuccessMsg: Locator;
+   14 |   readonly bankName: Locator;
+   15 |   readonly accountName: Locator;
+   16 |   readonly accountNumber: Locator;
+   17 |   readonly bankErrorMsg: Locator;
+   18 |   readonly accountNameErrorMsg: Locator;
+   19 |   readonly accountNumberErrorMsg: Locator;
+   20 |
+   21 |   constructor(page: Page) {
+   22 |     this.page = page;
+   23 |     this.streetField = page.getByLabel("Street");
+   24 |     this.stateField = page.getByLabel("State");
+   25 |     this.postalCodeField = page.getByLabel("Postal code");
+   26 |     this.proceedCheckoutBtn1 = page.locator('[data-test="proceed-2"]');
+   27 |     this.proceedCheckoutBtn2 = page.locator('[data-test="proceed-3"]');
+   28 |     this.paymentHeading = page.getByRole("heading", { name: "Payment" });
+   29 |     this.paymentCombobox = page.locator('[data-test="payment-method"]');
+   30 |     this.confirmPaymentBtn = page.locator('[data-test="finish"]');
+   31 |     this.paymentSuccessMsg = page.locator(
+   32 |       '[data-test="payment-success-message"]'
+   33 |     );
+   34 |     this.bankName = page.locator('[data-test="bank_name"]');
+   35 |     this.accountName = page.locator('[data-test="account_name"]');
+   36 |     this.accountNumber = page.locator('[data-test="account_number"]');
+   37 |     this.bankErrorMsg = page.getByText("Bank name can only contain");
+   38 |     this.accountNameErrorMsg = page.getByText("Account name can contain");
+   39 |     this.accountNumberErrorMsg = page.getByText("Account number must be");
+   40 |   }
+   41 |
+   42 |   async verifyCheckoutPage() {
+   43 |     await this.proceedCheckoutBtn1.waitFor({ state: "visible" });
+   44 |     await this.proceedCheckoutBtn1.click();
+   45 |     await this.page.waitForLoadState();
+   46 |     await expect(this.stateField).toBeVisible();
+   47 |     await expect(this.postalCodeField).toBeVisible();
+   48 |   }
+   49 |
+   50 |   async fillBillingAddressDetails(state: string, postalCode: string) {
+   51 |     expect(this.streetField).toHaveText("Test street 654");
+   52 |     await this.stateField.click();
+   53 |     await this.stateField.fill("State 1");
+   54 |     await this.page.waitForLoadState();
+   55 |     await this.postalCodeField.click();
+   56 |     await this.postalCodeField.fill("224");
+   57 |     await this.page.waitForLoadState();
+   58 |     // Wait for and click the final proceed button
+   59 |     await expect(this.proceedCheckoutBtn2).toBeEnabled();
+   60 |     await this.proceedCheckoutBtn2.click();
+   61 |   }
+   62 |
+   63 |   async choosePaymentMethod(method: string) {
+   64 |     await expect(this.paymentHeading).toBeVisible();
+   65 |     await this.paymentCombobox.waitFor({ state: "visible" });
+   66 |     await this.paymentCombobox.selectOption(method); // can store options of combobox in an enum
+   67 |     await this.confirmPaymentBtn.waitFor({ state: "visible" });
+   68 |   }
+   69 |
+   70 |   async fillPaymentDetails(
+   71 |     bank_name: string,
+   72 |     account_name: string,
+   73 |     account_number: string
+   74 |   ) {
+   75 |     await this.bankName.fill(bank_name);
+   76 |     await this.accountName.fill(account_name);
+   77 |     await this.accountNumber.fill(account_number);
+   78 |   }
+   79 |
+   80 |   async confirmPayment() {
+   81 |     expect(this.confirmPaymentBtn).toBeVisible();
+>  82 |     await this.confirmPaymentBtn.click();
+      |                                  ^ Error: locator.click: Test timeout of 30000ms exceeded.
+   83 |   }
+   84 |
+   85 |   async getConfirmationMessage() {
+   86 |     await this.paymentSuccessMsg.waitFor({ state: "visible" });
+   87 |     await expect(this.paymentSuccessMsg).toHaveText("Payment was successful");
+   88 |   }
+   89 |
+   90 |   async getErrorMessage() {
+   91 |     await this.bankErrorMsg.waitFor({ state: "visible" });
+   92 |     await this.accountNameErrorMsg.waitFor({ state: "visible" });
+   93 |     await this.accountNumberErrorMsg.waitFor({ state: "visible" });
+   94 |     await expect(this.bankErrorMsg).toHaveText(
+   95 |       "Bank name can only contain letters and spaces."
+   96 |     );
+   97 |     await expect(this.accountNameErrorMsg).toHaveText(
+   98 |       "Account name can contain letters, numbers, spaces, periods, apostrophes, and hyphens."
+   99 |     );
+  100 |     await expect(this.accountNumberErrorMsg).toHaveText(
+  101 |       "Account number must be numeric."
+  102 |     );
+  103 |   }
+  104 | }
+  105 |
+```
